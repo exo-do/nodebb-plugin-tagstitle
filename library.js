@@ -23,7 +23,6 @@ var tagsTitle = {};
       //Contiene la etiqueta +HD
       if (userid > 0 & tagsTitle.postCount  > 0 ) {
       //No hacemos nada
-});
       }
       else {
       //Redireccionar

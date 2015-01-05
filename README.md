@@ -7,7 +7,7 @@ Acepta mayúsculas, minúsculas, con +, con + y sin nada también, por si te sab
 
 ## Instalación
     
-    Introduce la carpeta "nodebb-plugin-tagstitle" dentro de "node_modules"
+    Crea la carpeta "nodebb-plugin-tagstitle", introduce los archivos e introduce la carpeta  dentro de "node_modules"
     Ejecuta en la terminal "npm install"
 
 ## Problemas conocidos
