@@ -1,20 +1,15 @@
-# Quickstart Plugin for NodeBB
+# NodeBB Tags Title Plugin
 
-A starter kit for quickly creating NodeBB plugins. Comes with a pre-setup LESS file, server side JS script with an `action:app.load` hook, and a client-side script. Most plugins need at least one of the above, so this ought to save you some time. For a full list of hooks have a look at our [wiki page](https://github.com/NodeBB/NodeBB/wiki/Plugin-Hooks), and for more information about creating plugins please visit our [documentation portal](https://docs.nodebb.org/).
+Este plugin otorga la funcionalidad de atribuir características especiales a los temas creados por los usuarios mediante la escritura de una serie de tags concretos. Por ejemplo, para hacer un post privado podemos escribir +hd, para un post no apto para el trabajo podemos escribir +nsfw
 
-Fork this or copy it, and using your favourite text editor find and replace all instances of `nodebb-plugin-quickstart` with `nodebb-plugin-your-plugins-name`. Change the author's name in the LICENSE and package.json files.
-
-Once you're done don't forget to publish it on NPM, and make a thread about it [here](https://docs.nodebb.org/en/latest/plugins/hooks.html).
+Acepta mayúsculas, minúsculas, con +, con + y sin nada también, por si te sabía a poco (revolucionario)
 
 
-## Hello World
+## Instalación
+    
+    Introduce la carpeta "nodebb-plugin-tagstitle" dentro de "node_modules"
+    Ejecuta en la terminal "npm install"
 
-Really simple, just edit `static/lib/main.js` and paste in `console.log('hello world');`, and that's it!
+## Problemas conocidos
 
-## Installation
-
-    npm install nodebb-plugin-quickstart
-
-## Screenshots
-
-Don't forget to add screenshots!
+Todavía hace falta realizar las redirecciones o cambiar los archivos TPL.

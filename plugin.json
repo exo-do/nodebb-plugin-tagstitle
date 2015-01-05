@@ -12,13 +12,5 @@
 		{
 			"hook": "filter:topic.get", "method": "getTopic", "callbacked": true
 		}
-	],
-  	"staticDirs": {
-"static": "./static"
-},
-"less": [
-"static/style.less"
-],
-"templates": "static/templates"
-}
+	]
 }
