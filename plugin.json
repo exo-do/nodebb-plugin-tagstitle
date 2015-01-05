@@ -1,0 +1,24 @@
+{
+	"id": "nodebb-plugin-tagstitle",
+	"name": "Special tag features for NodeBB",
+	"description": "This plugin allows users create new topics with special restrictions with special tags, for example, +hd, +prv, +nsfw... ",
+	"url": "https://github.com/rbbau/nodebb-plugin-tags-title",
+	"library": "./library.js",
+
+	"hooks": [
+		{
+			"hook": "action:page.load", "method": "goPage"
+		},
+		{
+			"hook": "filter:topic.get", "method": "getTopic", "callbacked": true
+		}
+	],
+  	"staticDirs": {
+"static": "./static"
+},
+"less": [
+"static/style.less"
+],
+"templates": "static/templates"
+}
+}
