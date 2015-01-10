@@ -6,11 +6,18 @@
 	"library": "./library.js",
 
 	"hooks": [
+    {
+      "hook": "static:app.load", "method": "init"
+    },
 		{
 			"hook": "action:page.load", "method": "goPage"
 		},
 		{
 			"hook": "filter:topic.get", "method": "getTopic", "callbacked": true
 		}
-	]
+	],
+  "staticDirs": {
+        "static": "./static"
+},
+  "templates": "static/templates"
 }
