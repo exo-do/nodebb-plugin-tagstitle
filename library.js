@@ -30,16 +30,26 @@ var tagsTitle = {};
     //Comprobamos si hay etiquetas insertadas por el usuario en el título
     if(topicTitle.indexOf('+hd')  >= 0) {
       //Contiene la etiqueta +HD
-      if (userid <= 1 || tagsTitle.postCount  == 0 ) {
+      if (tagsTitle.postCount  <= 16 ) {
         //Redireccionar
-
+	callback({
+		status: 302,
+		path: '/topicerror'
+	});
+	return;
     }
   }
     else if(topicTitle.indexOf('+18')  >= 0) {
       //Contiene la etiqueta +18
       if (userid <= 1 || tagsTitle.postCount  == 0 ) {
         //Redireccionar
-      }
+      callback({
+                status: 302,
+                path: '/topicerror'
+        });
+	return;
+
+	}
     }
 
     else if(topicTitle.indexOf('+prv')  >= 0) {
