@@ -14,11 +14,11 @@ Acepta mayúsculas, minúsculas y combinaciones de ambas. Las etiquetas incluida
 
 El plugin está funcionando correctamente en la rama de NodeBB 0.6.X.
 
-El plugin hace uso de elementos del core de NodeBB, concretamente "user.js"
+El plugin hace uso de elementos del core de NodeBB, concretamente "user.js" y "topics.js"
 
-El plugin hace uso de la plantilla topic-error.tpl, que es la que hay que editar y en la que aparecen los errores.
+Se comprueba si un usuario tiene acceso al topic segun las condiciones de la etiqueta. Si no cumple los requisitos, se pone a falso el privilegio de lectura.
 
-Compatible con la API
+- Compatible con la API
 
 
 ## Instalación
@@ -28,19 +28,10 @@ Compatible con la API
 
 ## Problemas conocidos y características pendientes
 
-Todavía hace falta realizar las redirecciones a las rutas definidas del error del topic.
+- Fijar las etiquetas como se quiera
 
 ##Como añadir una nueva etiqueta al plugin
 
-Para añadir una nueva etiqueta al plugin copia y pega después de ''//Añade a partir de aquí las nuevas etiquetas adicionales''
+Para añadir una nueva etiqueta al plugin:
 
-El siguiente código:
-
-    else if(topicTitle.indexOf('+etiqueta')  >= 0) {
-      //Contiene la etiqueta +etiqueta
-      if (userid <= 1 || tagsTitle.postCount  == 0 ) {
-        //Redireccionar
-      }
-    }
-
-Donde el nombre de la etiqueta es el que aparece después de index.Of
+En el fichero "library.js", añade la etiqueta en el array "etiquetas" y su condicion en el array "condicionesEt". La etiqueta y sus condiciones deben coincidir en la misma posicion. Si la etiqueta es tercera en el array de etiquetas su condicion(es) deben ser tercera(s) en el de condiciones.
