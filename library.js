@@ -1,6 +1,7 @@
 "use strict";
 
 var User = module.parent.require('./user');
+var Topic = module.parent.require('./topics');
 
 var tagsTitle = {};
 
@@ -18,55 +19,71 @@ var tagsTitle = {};
   };
 
   tagsTitle.getTopic = function (postContent, callback) {
-    //Obtenemos los datos del usuario
-    var userid = postContent.uid;
-    var userdata = User.getUserData(userid, function(err,getUserData) {
-    //Introducimos todos los datos del usuario en tagsTitle
-      tagsTitle.postCount = getUserData.postcount;
-      tagsTitle.reputation = getUserData.reputation;
-    });
-    //Metemos en una variable el título en minúscula
-    var topicTitle = postContent.title.toLowerCase();
-    //Comprobamos si hay etiquetas insertadas por el usuario en el título
-    if(topicTitle.indexOf('+hd')  >= 0) {
-      //Contiene la etiqueta +HD
-      if (tagsTitle.postCount  <= 16 ) {
-        //Redireccionar
-	callback({
-		status: 302,
-		path: '/topicerror'
-	});
-	return;
-    }
-  }
-    else if(topicTitle.indexOf('+18')  >= 0) {
-      //Contiene la etiqueta +18
-      if (userid <= 1 || tagsTitle.postCount  == 0 ) {
-        //Redireccionar
-      callback({
-                status: 302,
-                path: '/topicerror'
-        });
-	return;
-
-	}
-    }
-
-    else if(topicTitle.indexOf('+prv')  >= 0) {
-      //Contiene la etiqueta +PRV
-      if (userid <= 1 || tagsTitle.reputation <= 10  ) {
-        //Redireccionar
-      }
-    }
-    else if(topicTitle.indexOf('+nsfw')  >= 0) {
-      //Contiene la etiqueta +nsfw
-      if (userid <= 1 || tagsTitle.postCount  == 0 ) {
-        //Redireccionar
-      }
-    }
-    //Añade a partir de aquí las nuevas etiquetas adicionales
-    
-    //Fin de las etiquetas adicionales
+    // En realidad no hace falta hookear esta funcion..
     callback(null, postContent);
   };
+
+
+  tagsTitle.getTopicPrivileges = function (postContent, callback)
+  {
+    //console.log(postContent);
+    
+    var topicid = postContent.tid;
+    var userid = postContent.uid;
+
+    // Anadir las etiquetas que se quiera
+    var etiquetas = ["+hd", "+18", "+nsfw", "+prv"];
+    // condiciones para cada etiqueta..
+    var condicionesEt = [ ( tagsTitle.postCount < 1 ), // +hd
+                          ( tagsTitle.postCount < 1 ), // +18
+                          ( tagsTitle.postCount < 1 ), // +nsfw
+                          ( tagsTitle.postCount < 1 || tagsTitle.reputation < 10 ) // +prv
+                        ];
+
+    if(topicid)
+    { // Si es para ver un hilo compruebo si puede acceder
+      if(userid)
+      { // Si el usuario esta logeado compruebo si puede ver el post segun las etiquetas
+        var userdata = User.getUserData(postContent.uid, function(err,getUserData) {
+        //Introducimos todos los datos del usuario en tagsTitle
+          tagsTitle.postCount = getUserData.postcount;
+          tagsTitle.reputation = getUserData.reputation;
+        
+          var topicData = Topic.getTopicData(postContent.tid, function(err,topicData) {
+            var topicTitle = topicData.title.toLowerCase();
+
+            for(var i=0;i<etiquetas.length;i++)
+            {
+              if( (topicTitle.indexOf(etiquetas[i]) >= 0) && condicionesEt[i] )
+              {
+                postContent.read = false;
+              }
+            }
+            
+            callback(null, postContent);
+            return;
+          });
+        });
+      }
+      else
+      { // Si no esta logeado, miro si hay etiquetas, y si las hay directmente no entra
+        var topicData = Topic.getTopicData(postContent.tid, function(err,topicData) {
+          var topicTitle = topicData.title.toLowerCase();
+
+          for(var i=0;i<etiquetas.length;i++)
+          {
+            if( (topicTitle.indexOf(etiquetas[i]) >= 0) )
+            {
+              postContent.read = false;
+              break;
+            }
+          }
+          
+          callback(null, postContent);
+          return;
+        });
+      }
+    }
+  };
+
 module.exports = tagsTitle;
