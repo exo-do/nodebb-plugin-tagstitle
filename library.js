@@ -27,18 +27,17 @@ var tagsTitle = {};
   tagsTitle.getTopicPrivileges = function (postContent, callback)
   {
     //console.log(postContent);
-    // Info: https://github.com/NodeBB/NodeBB/wiki/Plugin-Hooks
-
+    
     var topicid = postContent.tid;
     var userid = postContent.uid;
 
     // Anadir las etiquetas que se quiera
-    var etiquetas = ["+hd", "+18", "+nsfw" "+prv"];
+    var etiquetas = ["+hd", "+18", "+nsfw", "+prv"];
     // condiciones para cada etiqueta..
     var condicionesEt = [ ( tagsTitle.postCount < 1 ), // +hd
                           ( tagsTitle.postCount < 1 ), // +18
                           ( tagsTitle.postCount < 1 ), // +nsfw
-                          ( tagsTitle.postCount < 1 && tagsTitle.reputation < 10 ) // +prv
+                          ( tagsTitle.postCount < 1 || tagsTitle.reputation < 10 ) // +prv
                         ];
 
     if(topicid)
