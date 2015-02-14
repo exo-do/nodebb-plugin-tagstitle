@@ -35,3 +35,5 @@ Se comprueba si un usuario tiene acceso al topic segun las condiciones de la eti
 Para añadir una nueva etiqueta al plugin:
 
 En el fichero "library.js", añade la etiqueta en el array "etiquetas" y su condicion en el array "condicionesEt". La etiqueta y sus condiciones deben coincidir en la misma posicion. Si la etiqueta es tercera en el array de etiquetas su condicion(es) deben ser tercera(s) en el de condiciones.
+
+Tambien debe indicarse el correspondiente mensaje de error en el array de mensajes de error.
