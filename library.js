@@ -27,18 +27,30 @@ var tagsTitle = {};
   tagsTitle.getTopicPrivileges = function (postContent, callback)
   {
     //console.log(postContent);
+
+    // Usamos javascript para limpiar el error por defecto y poner solamente nuestro error
+    // con lo que nos interesa
+    var mostrarError = [  "<script>$('.alert.alert-danger').html('",
+                          "');</script>" ];
     
     var topicid = postContent.tid;
     var userid = postContent.uid;
 
     // Anadir las etiquetas que se quiera
     var etiquetas = ["+hd", "+18", "+nsfw", "+prv"];
+
     // condiciones para cada etiqueta..
     var condicionesEt = [ ( tagsTitle.postCount < 1 ), // +hd
                           ( tagsTitle.postCount < 1 ), // +18
                           ( tagsTitle.postCount < 1 ), // +nsfw
                           ( tagsTitle.postCount < 1 || tagsTitle.reputation < 10 ) // +prv
                         ];
+
+    // Mensajes de error para cada etiqueta
+    var mensajeError = [  "<b>+hd</b><br> Para ver este hilo debes tener al menos 1 mensaje publicado",
+                          "<b>+18</b><br> Para ver este hilo debes tener al menos 1 mensaje publicado",
+                          "<b>+nsfw</b><br> Para ver este hilo debes tener al menos 1 mensaje publicado",
+                          "<b>+prv</b><br> Para ver este hilo debes tener al menos 1 mensaje publicado y tener mas de 10 puntos de reputacion" ];
 
     if(topicid)
     { // Si es para ver un hilo compruebo si puede acceder
@@ -57,9 +69,11 @@ var tagsTitle = {};
               if( (topicTitle.indexOf(etiquetas[i]) >= 0) && condicionesEt[i] )
               {
                 postContent.read = false;
+                callback(new Error(mostrarError[0]+mensajeError[i]+mostrarError[1]), postContent);
+                return;
               }
             }
-            
+            // Si llego aqui es que puede ver el hilo
             callback(null, postContent);
             return;
           });
@@ -75,10 +89,11 @@ var tagsTitle = {};
             if( (topicTitle.indexOf(etiquetas[i]) >= 0) )
             {
               postContent.read = false;
-              break;
+              callback(new Error(mostrarError[0]+mensajeError[i]+mostrarError[1]), postContent);
+              return;
             }
           }
-          
+          // Si llego aqui es que puede ver el hilo
           callback(null, postContent);
           return;
         });
