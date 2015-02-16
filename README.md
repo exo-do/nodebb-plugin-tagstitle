@@ -14,9 +14,11 @@ Acepta mayúsculas, minúsculas y combinaciones de ambas. Las etiquetas incluida
 
 El plugin está funcionando correctamente en la rama de NodeBB 0.6.X.
 
-El plugin hace uso de elementos del core de NodeBB, concretamente "user.js" y "topics.js"
+El plugin hace uso de elementos del core de NodeBB, concretamente "user.js", "topics.js" y "db.js"
 
 Se comprueba si un usuario tiene acceso al topic segun las condiciones de la etiqueta. Si no cumple los requisitos, se pone a falso el privilegio de lectura.
+
+Ademas se pueden añadir otras etiquetas que no tengas restriccion (temaserio, plataforma..) y automaticamente se añadiran a las etiquetas nativas de nodebb (tambien las etiquetas con restricciones se añadiran automaticamente si solamente las pones en el nombre del topic)
 
 - Compatible con la API
 
@@ -37,3 +39,5 @@ Para añadir una nueva etiqueta al plugin:
 En el fichero "library.js", añade la etiqueta en el array "etiquetas" y su condicion en el array "condicionesEt". La etiqueta y sus condiciones deben coincidir en la misma posicion. Si la etiqueta es tercera en el array de etiquetas su condicion(es) deben ser tercera(s) en el de condiciones.
 
 Tambien debe indicarse el correspondiente mensaje de error en el array de mensajes de error.
+
+Las etiquetas sin restricciones no necesitan ningun mensaje de error ni condiciones.
