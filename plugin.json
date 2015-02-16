@@ -13,10 +13,14 @@
 			"hook": "action:page.load", "method": "goPage"
 		},
 		{
-			"hook": "filter:topic.get", "method": "getTopic", "callbacked": true
+			"hook": "filter:privileges.topics.get", "method": "getTopicPrivileges", "callbacked": true
 		},
 		{
-			"hook": "filter:privileges.topics.get", "method": "getTopicPrivileges", "callbacked": true
+			"hook": "action:topic.save", "method": "topicSaved", "callbacked": true
+		}
+		,
+		{
+			"hook": "action:topic.edit", "method": "topicSaved", "callbacked": true
 		}
 	],
   "staticDirs": {
