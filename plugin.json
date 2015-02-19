@@ -26,5 +26,8 @@
   "staticDirs": {
         "static": "./static"
 },
+	"scripts": [
+		"lib/client.js"
+	],
   "templates": "static/templates"
 }
