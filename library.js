@@ -59,7 +59,7 @@ tagsTitle.etiquetasSinRestriccion = ["[temaserio]", "[plataforma]", "[gore]"];
     db.getSetMembers('topic:' + postContent.tid + ':tags', function(err,tags){
       // obtenemos los tags de nodebb para este topic
       // Compatibilidad con etiquetas de nodebb y etiquetas en el titulo
-      console.log(tags);
+      //console.log(tags);
       var tagsStr = "";
       for(var i=0;i<tags.length;i++)
       { // Creamos un string con todas las tags
@@ -129,7 +129,7 @@ tagsTitle.etiquetasSinRestriccion = ["[temaserio]", "[plataforma]", "[gore]"];
 
     db.getSetMembers('topic:' + tid + ':tags', function(err,tags){
       // obtenemos los tags de nodebb para este topic
-      console.log(tags);
+      //console.log(tags);
       var tagsToAdd = [];
       var tagsStr = "";
       for(var i=0;i<tags.length;i++)
