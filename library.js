@@ -23,12 +23,12 @@ tagsTitle.condicionesEt = [];
 tagsTitle.mensajeError = [  "<b>+hd</b><br> Para ver este hilo debes tener al menos 1 mensaje publicado",
                       "<b>+18</b><br> Para ver este hilo debes tener al menos 1 mensaje publicado",
                       "<b>+nsfw</b><br> Para ver este hilo debes tener al menos 1 mensaje publicado",
-                      "<b>+prv</b><br> Para ver este hilo debes tener al menos 1 mensaje publicado y tener mas de 10 puntos de reputacion" ];
+                      "<b>+prv</b><br> Para ver este hilo debes tener mas de 100 mensajes publicados" ];
 
 
 // Etiquetas sin restriccion de acceso
 // Para estas etiquetas no hay que poner ningun mensaje de error de acceso ni condiciones!
-tagsTitle.etiquetasSinRestriccion = ["[temaserio]", "[plataforma]", "[gore]"];
+tagsTitle.etiquetasSinRestriccion = ["[temaserio]", "[plataforma]", "[chupipandi]", "[tutorial]", "[debate]", "[informacion]", "[duda]", "[solucionado]", "[importante]", "[gore]"];
 
 
 
@@ -52,7 +52,7 @@ tagsTitle.etiquetasSinRestriccion = ["[temaserio]", "[plataforma]", "[gore]"];
     tagsTitle.condicionesEt = [ ( tagsTitle.postCount < 1 ), // +hd
                           ( tagsTitle.postCount < 1 ), // +18
                           ( tagsTitle.postCount < 1 ), // +nsfw
-                          ( tagsTitle.postCount < 1 || tagsTitle.reputation < 10 ) // +prv
+                          ( tagsTitle.postCount > 100 ) // +prv
                         ];
 
 
