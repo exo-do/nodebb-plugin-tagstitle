@@ -52,7 +52,7 @@ tagsTitle.etiquetasSinRestriccion = ["[temaserio]", "[plataforma]", "[chupipandi
     tagsTitle.condicionesEt = [ ( tagsTitle.postCount < 1 ), // +hd
                           ( tagsTitle.postCount < 1 ), // +18
                           ( tagsTitle.postCount < 1 ), // +nsfw
-                          ( tagsTitle.postCount > 100 ) // +prv
+                          ( tagsTitle.postCount < 100 ) // +prv
                         ];
 
 
