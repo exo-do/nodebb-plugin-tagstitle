@@ -28,7 +28,7 @@ tagsTitle.mensajeError = [  "<b>+hd</b><br> Para ver este hilo debes tener al me
 
 // Etiquetas sin restriccion de acceso
 // Para estas etiquetas no hay que poner ningun mensaje de error de acceso ni condiciones!
-tagsTitle.etiquetasSinRestriccion = ["[temaserio]", "[plataforma]", "[chupipandi]", "[tutorial]", "[debate]", "[informacion]", "[duda]", "[solucionado]", "[importante]", "[gore]"];
+tagsTitle.etiquetasSinRestriccion = ["temaserio", "plataforma", "chupipandi", "tutorial", "debate", "encuesta", "informacion", "duda", "solucionado", "importante", "gore"];
 
 
 
@@ -121,22 +121,21 @@ tagsTitle.etiquetasSinRestriccion = ["[temaserio]", "[plataforma]", "[chupipandi
     }); // Fin buscar tag en db
   };
 
-  tagsTitle.topicSaved = function(topicData, callback) {
+  tagsTitle.topicSaved = function(topicData) {
     // Me viene tid y title -> Puedo modificar en la db las tags y anadirlas!
 
     var tid = topicData.tid;
+    var titleOk = topicData.title;
     var title = topicData.title.toLowerCase();
 
     db.getSetMembers('topic:' + tid + ':tags', function(err,tags){
       // obtenemos los tags de nodebb para este topic
-      //console.log(tags);
       var tagsToAdd = [];
       var tagsStr = "";
       for(var i=0;i<tags.length;i++)
       { // Creamos un string con todas las tags que ya tiene
         tagsStr = tagsStr + "["+tags[i]+"]";
       }
-      // console.log("tagsStr: "+tagsStr);
 
       // Etiquetas con restricciones
       for(var i=0;i<tagsTitle.etiquetasConRestriccion.length;i++)
@@ -145,6 +144,10 @@ tagsTitle.etiquetasSinRestriccion = ["[temaserio]", "[plataforma]", "[chupipandi
         { // Si en el titulo hay un tag y en los tags de node no, lo anado
           tagsToAdd.push(tagsTitle.etiquetasConRestriccion[i]);
         }
+        if(title.indexOf(tagsTitle.etiquetasConRestriccion[i]) < 0 && (tagsStr.indexOf(tagsTitle.etiquetasConRestriccion[i]) > -1) )
+        {
+          titleOk = titleOk + "[" + tagsTitle.etiquetasConRestriccion[i] + "]";
+        }
       }
 
       // Etiquetas sin restricciones
@@ -152,16 +155,20 @@ tagsTitle.etiquetasSinRestriccion = ["[temaserio]", "[plataforma]", "[chupipandi
       {
         if( (title.indexOf(tagsTitle.etiquetasSinRestriccion[i]) >= 0) && (tagsStr.indexOf(tagsTitle.etiquetasSinRestriccion[i]) < 0) )
         { // Si en el titulo hay un tag y en los tags de node no, lo anado
-          tagsToAdd.push(tagsTitle.etiquetasSinRestriccion[i].replace(/\[|\]/g, "")); // Reemplazando los [] para evitar problemas
+          tagsToAdd.push(tagsTitle.etiquetasSinRestriccion[i]); // Reemplazando los [] para evitar problemas
+        }
+        if(title.indexOf(tagsTitle.etiquetasSinRestriccion[i]) < 0 && (tagsStr.indexOf(tagsTitle.etiquetasSinRestriccion[i]) > -1) )
+        {
+          titleOk = titleOk + "[" + tagsTitle.etiquetasSinRestriccion[i] + "]";
         }
       }
-
       // Anadimos las tags que tengamos que anadir
-      Topic.createTags(tagsToAdd, tid, topicData.timestamp);
+      Topic.createTags(tagsToAdd, tid, Date.now(), function(err, rr){
+        Topic.setTopicField(tid, "title", titleOk);
+      });
     });
 
-
-
   };
+
 
 module.exports = tagsTitle;
