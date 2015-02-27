@@ -146,7 +146,7 @@ tagsTitle.etiquetasSinRestriccion = ["temaserio", "plataforma", "chupipandi", "t
         }
         if(title.indexOf(tagsTitle.etiquetasConRestriccion[i]) < 0 && (tagsStr.indexOf(tagsTitle.etiquetasConRestriccion[i]) > -1) )
         {
-          titleOk = titleOk + "[" + tagsTitle.etiquetasConRestriccion[i] + "]";
+          titleOk = titleOk + " [" + tagsTitle.etiquetasConRestriccion[i] + "]";
         }
       }
 
@@ -159,7 +159,7 @@ tagsTitle.etiquetasSinRestriccion = ["temaserio", "plataforma", "chupipandi", "t
         }
         if(title.indexOf(tagsTitle.etiquetasSinRestriccion[i]) < 0 && (tagsStr.indexOf(tagsTitle.etiquetasSinRestriccion[i]) > -1) )
         {
-          titleOk = titleOk + "[" + tagsTitle.etiquetasSinRestriccion[i] + "]";
+          titleOk =  "[" + tagsTitle.etiquetasSinRestriccion[i] + "] " + titleOk;
         }
       }
       // Anadimos las tags que tengamos que anadir
