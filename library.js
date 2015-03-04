@@ -126,7 +126,7 @@ tagsTitle.etiquetasSinRestriccion = ["temaserio", "plataforma", "chupipandi", "t
 
     var tid = topicData.tid;
     var titleOk = topicData.title;
-    var title = topicData.title.toLowerCase();
+    var title = topicData.title.toLowerCase().replace(/ /g, ""); // Quitamos espacios, EJ: tema serio = temaserio
 
     db.getSetMembers('topic:' + tid + ':tags', function(err,tags){
       // obtenemos los tags de nodebb para este topic
@@ -139,35 +139,47 @@ tagsTitle.etiquetasSinRestriccion = ["temaserio", "plataforma", "chupipandi", "t
 
       // Etiquetas con restricciones
       for(var i=0;i<tagsTitle.etiquetasConRestriccion.length;i++)
-      {
-        if( (title.indexOf(tagsTitle.etiquetasConRestriccion[i]) >= 0) && (tagsStr.indexOf(tagsTitle.etiquetasConRestriccion[i]) < 0) )
+      { var actTag = tagsTitle.etiquetasConRestriccion[i];
+        var actTagCorchetes = "[" + actTag + "]";
+        if( (title.indexOf(actTag) >= 0) && (tagsStr.indexOf(actTag) < 0) )
         { // Si en el titulo hay un tag y en los tags de node no, lo anado
-          tagsToAdd.push(tagsTitle.etiquetasConRestriccion[i]);
+          tagsToAdd.push(actTag);
+          var re = new RegExp(regexFilter(actTag), 'ig');
+          titleOk = titleOk.replace(re, actTag);
         }
-        if(title.indexOf(tagsTitle.etiquetasConRestriccion[i]) < 0 && (tagsStr.indexOf(tagsTitle.etiquetasConRestriccion[i]) > -1) )
+        if(title.indexOf(actTagCorchetes) < 0 && (tagsStr.indexOf(actTag) > -1) )
         {
-          titleOk = titleOk + " [" + tagsTitle.etiquetasConRestriccion[i] + "]";
+          titleOk = titleOk + actTagCorchetes;
         }
       }
 
       // Etiquetas sin restricciones
       for(var i=0;i<tagsTitle.etiquetasSinRestriccion.length;i++)
-      {
-        if( (title.indexOf(tagsTitle.etiquetasSinRestriccion[i]) >= 0) && (tagsStr.indexOf(tagsTitle.etiquetasSinRestriccion[i]) < 0) )
+      { var actTag = tagsTitle.etiquetasSinRestriccion[i];
+        var actTagCorchetes = "[" + actTag + "]";
+        if( (title.indexOf(actTagCorchetes) >= 0) && (tagsStr.indexOf(actTag) < 0) )
         { // Si en el titulo hay un tag y en los tags de node no, lo anado
-          tagsToAdd.push(tagsTitle.etiquetasSinRestriccion[i]); // Reemplazando los [] para evitar problemas
+          tagsToAdd.push(actTag); // Reemplazando los [] para evitar problemas
+          var re = new RegExp(regexFilter(actTag), 'ig');
+          titleOk = titleOk.replace(re, actTag);
         }
-        if(title.indexOf(tagsTitle.etiquetasSinRestriccion[i]) < 0 && (tagsStr.indexOf(tagsTitle.etiquetasSinRestriccion[i]) > -1) )
+        if(title.indexOf(actTagCorchetes) < 0 && (tagsStr.indexOf(actTag) > -1) )
         {
-          titleOk =  "[" + tagsTitle.etiquetasSinRestriccion[i] + "] " + titleOk;
+          titleOk =  actTagCorchetes + titleOk;
         }
       }
+
       // Anadimos las tags que tengamos que anadir
       Topic.createTags(tagsToAdd, tid, Date.now(), function(err, rr){
         Topic.setTopicField(tid, "title", titleOk);
       });
     });
 
+  };
+
+  var regexFilter = function(str)
+  {
+    return str.replace(/([.?*+^$[\]\\(){}|-])/g, "\\$1");
   };
 
 
