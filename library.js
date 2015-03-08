@@ -130,7 +130,7 @@ tagsTitle.etiquetasSinRestriccion = ["temaserio", "plataforma", "chupipandi", "t
 
     db.getSetMembers('topic:' + tid + ':tags', function(err,tags){
       // obtenemos los tags de nodebb para este topic
-      var tagsToAdd = [];
+      var tagsToAdd = tags;
       var tagsStr = "";
       for(var i=0;i<tags.length;i++)
       { // Creamos un string con todas las tags que ya tiene
@@ -170,7 +170,7 @@ tagsTitle.etiquetasSinRestriccion = ["temaserio", "plataforma", "chupipandi", "t
       }
 
       // Anadimos las tags que tengamos que anadir
-      Topic.createTags(tagsToAdd, tid, Date.now(), function(err, rr){
+      Topic.updateTags(tid, tagsToAdd, function(err, rr){
         Topic.setTopicField(tid, "title", titleOk);
       });
     });
