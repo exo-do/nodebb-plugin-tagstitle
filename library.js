@@ -28,7 +28,7 @@ tagsTitle.mensajeError = [  "<b>+hd</b><br> Para ver este hilo debes tener al me
 
 // Etiquetas sin restriccion de acceso
 // Para estas etiquetas no hay que poner ningun mensaje de error de acceso ni condiciones!
-tagsTitle.etiquetasSinRestriccion = ["temaserio", "plataforma", "chupipandi", "tutorial", "debate", "encuesta", "informacion", "duda", "solucionado", "importante", "gore"];
+tagsTitle.etiquetasSinRestriccion = ["temaserio", "plataforma", "chupipandi", "tutorial", "noticias", "review", "debate", "encuesta", "informacion", "duda", "solucionado", "importante", "gore"];
 
 
 
