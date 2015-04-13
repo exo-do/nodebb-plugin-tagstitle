@@ -74,12 +74,20 @@ tagsTitle.etiquetasSinRestriccion = ["temaserio", "plataforma", "chupipandi", "t
         if(userid)
         { // Si el usuario esta logeado compruebo si puede ver el post segun las etiquetas
           var userdata = User.getUserData(userid, function(err,getUserData) {
+            if(err)
+            {
+              return callback(err, postContent);
+            }
           //Introducimos todos los datos del usuario en tagsTitle
             tagsTitle.postCount = getUserData.postcount;
             tagsTitle.reputation = getUserData.reputation;
             
             var topicData = Topic.getTopicData(postContent.tid, function(err,topicData) {
               //console.log(topicData);
+              if(err || !topicData)
+              {
+                return callback(err, postContent);
+              }
               
               var topicTitle = topicData.title.toLowerCase();
 
