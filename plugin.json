@@ -29,5 +29,6 @@
 	"scripts": [
 		"lib/client.js"
 	],
-  "templates": "static/templates"
+  "templates": "static/templates",
+  "minver": "0.6.1"
 }
