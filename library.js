@@ -30,7 +30,7 @@ tagsTitle.mensajeError = [  "<b>+hd</b><br> Para ver este hilo debes tener al me
 
 // Etiquetas sin restriccion de acceso
 // Para estas etiquetas no hay que poner ningun mensaje de error de acceso ni condiciones!
-tagsTitle.etiquetasSinRestriccion = ["temaserio", "plataforma", "peña", "tutorial", "noticia", "review", "debate", "encuesta", "info", "duda", "chollo", "importante"];
+tagsTitle.etiquetasSinRestriccion = ["TemaSerio", "Plataforma", "Peña", "Tutorial", "Noticia", "Review", "Debate", "Encuesta", "Info", "Duda", "Chollo", "Importante"];
 
 
 
@@ -149,33 +149,37 @@ tagsTitle.etiquetasSinRestriccion = ["temaserio", "plataforma", "peña", "tutori
 
       // Etiquetas con restricciones
       for(var i=0;i<tagsTitle.etiquetasConRestriccion.length;i++)
-      { var actTag = tagsTitle.etiquetasConRestriccion[i];
-        var actTagCorchetes = "[" + actTag + "]";
+      { 
+        var actTagCapitalizada = tagsTitle.etiquetasConRestriccion[i];
+        var actTag = tagsTitle.etiquetasConRestriccion[i].toLowerCase();
+        var actTagCorchetes = "[" + actTagCapitalizada + "]";
         if( (title.indexOf(actTag) >= 0) && (tagsStr.indexOf(actTag) < 0) )
         { // Si en el titulo hay un tag y en los tags de node no, lo anado
           tagsToAdd.push(actTag);
           var re = new RegExp(regexFilter(actTag), 'ig');
-          titleOk = titleOk.replace(re, actTag);
+          titleOk = titleOk.replace(re, actTagCapitalizada);
         }
         if(title.indexOf(actTagCorchetes) < 0 && (tagsStr.indexOf(actTag) > -1) )
         {
-          titleOk = titleOk + actTagCorchetes;
+          titleOk = titleOk + " " + actTagCorchetes;
         }
       }
 
       // Etiquetas sin restricciones
       for(var i=0;i<tagsTitle.etiquetasSinRestriccion.length;i++)
-      { var actTag = tagsTitle.etiquetasSinRestriccion[i];
-        var actTagCorchetes = "[" + actTag + "]";
-        if( (title.indexOf(actTagCorchetes) >= 0) && (tagsStr.indexOf(actTag) < 0) )
+      { 
+        var actTagCapitalizada = tagsTitle.etiquetasSinRestriccion[i];
+        var actTag = tagsTitle.etiquetasSinRestriccion[i].toLowerCase();
+        var actTagCorchetes = "[" + actTagCapitalizada + "]";
+        if( (title.indexOf(actTagCorchetes.toLowerCase()) >= 0) && (tagsStr.indexOf(actTag) < 0) )
         { // Si en el titulo hay un tag y en los tags de node no, lo anado
           tagsToAdd.push(actTag); // Reemplazando los [] para evitar problemas
           var re = new RegExp(regexFilter(actTag), 'ig');
-          titleOk = titleOk.replace(re, actTag);
+          titleOk = titleOk.replace(re, actTagCapitalizada);
         }
         if(title.indexOf(actTagCorchetes) < 0 && (tagsStr.indexOf(actTag) > -1) )
         {
-          titleOk =  actTagCorchetes + titleOk;
+          titleOk =  actTagCorchetes + " " + titleOk;
         }
       }
 
