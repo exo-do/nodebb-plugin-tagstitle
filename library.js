@@ -14,7 +14,7 @@ tagsTitle.mostrarError = [  "<script>$('.alert.alert-danger').html('",
                             "');</script>" ];
 
 // Anadir las etiquetas que se quiera (Solo etiquetas con restriccion para no entrar al hilo)
-tagsTitle.etiquetasConRestriccion = ["+hd", "+18", "+nsfw", "+gore","+prv"];
+tagsTitle.etiquetasConRestriccion = ["+hd", "+18", "+nsfw", "+nsfl", "+gore","+prv"];
 
 // condiciones para cada etiqueta.. (Deben indicarse en cada funcion en las que se usen para que tengan efecto)
 tagsTitle.condicionesEt = [];
@@ -23,13 +23,14 @@ tagsTitle.condicionesEt = [];
 tagsTitle.mensajeError = [  "<b>+hd</b><br> Para ver este hilo debes tener al menos 1 mensaje publicado",
                       "<b>+18</b><br> Para ver este hilo debes tener al menos 1 mensaje publicado",
                       "<b>+nsfw</b><br> Para ver este hilo debes tener al menos 1 mensaje publicado",
+					  "<b>+nsfl</b><br> Para ver este hilo debes tener al menos 1 mensaje publicado",
                       "<b>+gore</b><br> Para ver este hilo debes tener al menos 1 mensaje publicado",
                       "<b>+prv</b><br> Para ver este hilo debes tener mas de 100 mensajes publicados" ];
 
 
 // Etiquetas sin restriccion de acceso
 // Para estas etiquetas no hay que poner ningun mensaje de error de acceso ni condiciones!
-tagsTitle.etiquetasSinRestriccion = ["temaserio", "plataforma", "chupipandi", "tutorial", "noticias", "review", "debate", "encuesta", "informacion", "duda", "solucionado", "importante"];
+tagsTitle.etiquetasSinRestriccion = ["temaserio", "plataforma", "peña", "tutorial", "noticia", "review", "debate", "encuesta", "info", "duda", "chollo", "importante"];
 
 
 
@@ -78,6 +79,7 @@ tagsTitle.etiquetasSinRestriccion = ["temaserio", "plataforma", "chupipandi", "t
             tagsTitle.condicionesEt = [ ( tagsTitle.postCount < 1 ), // +hd
                                   ( tagsTitle.postCount < 1 ), // +18
                                   ( tagsTitle.postCount < 1 ), // +nsfw
+				 				  ( tagsTitle.postCount < 1 ), // +nsfl
                                   ( tagsTitle.postCount < 1 ), // +gore
                                   ( tagsTitle.postCount < 100 ) // +prv
                                 ];
