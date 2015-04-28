@@ -3,7 +3,8 @@
 var User = module.parent.require('./user');
 var Topic = module.parent.require('./topics');
 var db = module.parent.require('./database');
-var Tags = module.parent.require('./topics/tags');
+var Tags = module.parent.require('./topics/tags'),
+    async = require('async');;
 
 var tagsTitle = {};
 
@@ -159,7 +160,7 @@ tagsTitle.etiquetasSinRestriccion = ["TemaSerio", "Plataforma", "Peña", "Tutori
           var re = new RegExp(regexFilter(actTag), 'ig');
           titleOk = titleOk.replace(re, actTagCapitalizada);
         }
-        if(title.indexOf(actTagCorchetes) < 0 && (tagsStr.indexOf(actTag) > -1) )
+        if(title.indexOf(actTagCorchetes.toLowerCase()) < 0 && (tagsStr.indexOf(actTag) > -1) )
         {
           titleOk = titleOk + " " + actTagCorchetes;
         }
@@ -177,7 +178,7 @@ tagsTitle.etiquetasSinRestriccion = ["TemaSerio", "Plataforma", "Peña", "Tutori
           var re = new RegExp(regexFilter(actTag), 'ig');
           titleOk = titleOk.replace(re, actTagCapitalizada);
         }
-        if(title.indexOf(actTagCorchetes) < 0 && (tagsStr.indexOf(actTag) > -1) )
+        if(title.indexOf(actTagCorchetes.toLowerCase()) < 0 && (tagsStr.indexOf(actTag) > -1) )
         {
           titleOk =  actTagCorchetes + " " + titleOk;
         }
@@ -194,6 +195,85 @@ tagsTitle.etiquetasSinRestriccion = ["TemaSerio", "Plataforma", "Peña", "Tutori
   var regexFilter = function(str)
   {
     return str.replace(/([.?*+^$[\]\\(){}|-])/g, "\\$1");
+  };
+
+  tagsTitle.canWatchTopic = function(uid, tid, callback){
+    db.getSetMembers('topic:' + tid + ':tags', function(err,tags){
+      // obtenemos los tags de nodebb para este topic
+      // Compatibilidad con etiquetas de nodebb y etiquetas en el titulo
+      //console.log(tags);
+      var tagsStr = "";
+      for(var i=0;i<tags.length;i++)
+      { // Creamos un string con todas las tags
+        tagsStr = tagsStr + "["+tags[i]+"]";
+      }
+    
+      var topicid = tid;
+      var userid = uid;
+      var postContent = {};
+
+      if(topicid)
+      { // Si es para ver un hilo compruebo si puede acceder
+        if(userid)
+        { // Si el usuario esta logeado compruebo si puede ver el post segun las etiquetas
+          var userdata = User.getUserData(userid, function(err,getUserData) {
+            if(err)
+            {
+              return callback("error", false);
+            }
+          //Introducimos todos los datos del usuario en tagsTitle
+            tagsTitle.postCount = getUserData.postcount;
+            tagsTitle.reputation = getUserData.reputation;
+
+            // condiciones para cada etiqueta con restricciones..
+            tagsTitle.condicionesEt = [ ( tagsTitle.postCount < 1 ), // +hd
+                                  ( tagsTitle.postCount < 1 ), // +18
+                                  ( tagsTitle.postCount < 1 ), // +nsfw
+                  ( tagsTitle.postCount < 1 ), // +nsfl
+                                  ( tagsTitle.postCount < 1 ), // +gore
+                                  ( tagsTitle.postCount < 100 ) // +prv
+                                ];
+            
+            var topicData = Topic.getTopicData(tid, function(err,topicData) {
+              //console.log(topicData);
+              if(err || !topicData)
+              {
+                return callback("error", false);
+              }
+              
+              var topicTitle = topicData.title.toLowerCase();
+
+              for(var i=0;i<tagsTitle.etiquetasConRestriccion.length;i++)
+              {
+                if( ( (topicTitle.indexOf(tagsTitle.etiquetasConRestriccion[i]) >= 0) || (tagsStr.indexOf(tagsTitle.etiquetasConRestriccion[i]) >= 0) ) && tagsTitle.condicionesEt[i] )
+                {
+                  return callback("error", false);
+                }
+              }
+              // Si llego aqui es que puede ver el hilo
+              return callback(null, true);
+            });// Fin buscar topic
+          }); // Fin buscar User
+        }
+        else
+        { // Si no esta logeado, miro si hay etiquetas, y si las hay directmente no entra
+          var topicData = Topic.getTopicData(tid, function(err,topicData) {
+            var topicTitle = topicData.title.toLowerCase();
+
+            for(var i=0;i<tagsTitle.etiquetasConRestriccion.length;i++)
+            {
+              if( ( (topicTitle.indexOf(tagsTitle.etiquetasConRestriccion[i]) >= 0) || (tagsStr.indexOf(tagsTitle.etiquetasConRestriccion[i]) >= 0) ) )
+              {
+                postContent.read = false;
+                return callback("error", false);
+              }
+            }
+            // Si llego aqui es que puede ver el hilo
+            return callback(null, true);
+          }); // Fin buscar topic
+        }
+      }
+    }); // Fin buscar tag en db
   };
 
 
