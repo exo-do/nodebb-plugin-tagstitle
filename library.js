@@ -112,6 +112,11 @@ tagsTitle.etiquetasSinRestriccion = ["TemaSerio", "Plataforma", "Peña", "Tutori
         else
         { // Si no esta logeado, miro si hay etiquetas, y si las hay directmente no entra
           var topicData = Topic.getTopicData(postContent.tid, function(err,topicData) {
+            if(err || !topicData)
+            {
+              return callback(err, postContent);
+            }
+
             var topicTitle = topicData.title.toLowerCase();
 
             for(var i=0;i<tagsTitle.etiquetasConRestriccion.length;i++)
