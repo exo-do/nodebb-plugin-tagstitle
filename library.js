@@ -24,9 +24,9 @@ tagsTitle.condicionesEt = [];
 tagsTitle.mensajeError = [  "<b>+hd</b><br> Para ver este hilo debes tener al menos 1 mensaje publicado",
                       "<b>+18</b><br> Para ver este hilo debes tener al menos 1 mensaje publicado",
                       "<b>+nsfw</b><br> Para ver este hilo debes tener al menos 1 mensaje publicado",
-					  "<b>+nsfl</b><br> Para ver este hilo debes tener al menos 1 mensaje publicado",
+					           "<b>+nsfl</b><br> Para ver este hilo debes tener al menos 1 mensaje publicado",
                       "<b>+gore</b><br> Para ver este hilo debes tener al menos 1 mensaje publicado",
-                      "<b>+prv</b><br> Para ver este hilo debes tener mas de 100 mensajes publicados" ];
+                      "<b>+prv</b><br> Para ver este hilo debes tener mas de 100 mensajes publicados y estar registrado antes de que se crease este hilo" ];
 
 
 // Etiquetas sin restriccion de acceso
@@ -72,18 +72,10 @@ tagsTitle.etiquetasSinRestriccion = ["TemaSerio", "Plataforma", "Peña", "Tutori
             {
               return callback(err, postContent);
             }
-          //Introducimos todos los datos del usuario en tagsTitle
+            // console.log(getUserData);
+            //Introducimos todos los datos del usuario en tagsTitle
             tagsTitle.postCount = getUserData.postcount;
             tagsTitle.reputation = getUserData.reputation;
-
-            // condiciones para cada etiqueta con restricciones..
-            tagsTitle.condicionesEt = [ ( tagsTitle.postCount < 1 ), // +hd
-                                  ( tagsTitle.postCount < 1 ), // +18
-                                  ( tagsTitle.postCount < 1 ), // +nsfw
-				 				  ( tagsTitle.postCount < 1 ), // +nsfl
-                                  ( tagsTitle.postCount < 1 ), // +gore
-                                  ( tagsTitle.postCount < 100 ) // +prv
-                                ];
             
             var topicData = Topic.getTopicData(postContent.tid, function(err,topicData) {
               //console.log(topicData);
@@ -91,6 +83,16 @@ tagsTitle.etiquetasSinRestriccion = ["TemaSerio", "Plataforma", "Peña", "Tutori
               {
                 return callback(err, postContent);
               }
+              // console.log(topicData);
+
+              // condiciones para cada etiqueta con restricciones..
+              tagsTitle.condicionesEt = [ ( tagsTitle.postCount < 1 ), // +hd
+                                  ( tagsTitle.postCount < 1 ), // +18
+                                  ( tagsTitle.postCount < 1 ), // +nsfw
+                                  ( tagsTitle.postCount < 1 ), // +nsfl
+                                  ( tagsTitle.postCount < 1 ), // +gore
+                                  ( tagsTitle.postCount < 100 || (getUserData.joindate > topicData.timestamp) ) // +prv
+                                ];
               
               var topicTitle = topicData.title.toLowerCase();
 
@@ -165,7 +167,7 @@ tagsTitle.etiquetasSinRestriccion = ["TemaSerio", "Plataforma", "Peña", "Tutori
           var re = new RegExp(regexFilter(actTag), 'ig');
           titleOk = titleOk.replace(re, actTagCapitalizada);
         }
-        if(title.indexOf(actTagCorchetes.toLowerCase()) < 0 && (tagsStr.indexOf(actTag) > -1) )
+        if(title.indexOf(actTag) < 0 && (tagsStr.indexOf(actTag) > -1) )
         {
           titleOk = titleOk + " " + actTagCorchetes;
         }
