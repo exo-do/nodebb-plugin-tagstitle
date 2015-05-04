@@ -67,49 +67,56 @@ tagsTitle.etiquetasSinRestriccion = ["TemaSerio", "Plataforma", "Peña", "Tutori
       { // Si es para ver un hilo compruebo si puede acceder
         if(userid)
         { // Si el usuario esta logeado compruebo si puede ver el post segun las etiquetas
-          var userdata = User.getUserData(userid, function(err,getUserData) {
-            if(err)
-            {
-              return callback(err, postContent);
+          User.isAdministrator(userid, function(err,isAdmin) {
+            if(isAdmin)
+            { // Si es admin, lo dejo entrar
+              return callback(null, postContent); 
             }
-            // console.log(getUserData);
-            //Introducimos todos los datos del usuario en tagsTitle
-            tagsTitle.postCount = getUserData.postcount;
-            tagsTitle.reputation = getUserData.reputation;
             
-            var topicData = Topic.getTopicData(postContent.tid, function(err,topicData) {
-              //console.log(topicData);
-              if(err || !topicData)
+            var userdata = User.getUserData(userid, function(err,getUserData) {
+              if(err)
               {
                 return callback(err, postContent);
               }
-              // console.log(topicData);
-
-              // condiciones para cada etiqueta con restricciones..
-              tagsTitle.condicionesEt = [ ( tagsTitle.postCount < 1 ), // +hd
-                                  ( tagsTitle.postCount < 1 ), // +18
-                                  ( tagsTitle.postCount < 1 ), // +nsfw
-                                  ( tagsTitle.postCount < 1 ), // +nsfl
-                                  ( tagsTitle.postCount < 1 ), // +gore
-                                  ( tagsTitle.postCount < 100 || (getUserData.joindate > topicData.timestamp) ) // +prv
-                                ];
+              // console.log(getUserData);
+              //Introducimos todos los datos del usuario en tagsTitle
+              tagsTitle.postCount = getUserData.postcount;
+              tagsTitle.reputation = getUserData.reputation;
               
-              var topicTitle = topicData.title.toLowerCase();
-
-              for(var i=0;i<tagsTitle.etiquetasConRestriccion.length;i++)
-              {
-                if( ( (topicTitle.indexOf(tagsTitle.etiquetasConRestriccion[i]) >= 0) || (tagsStr.indexOf(tagsTitle.etiquetasConRestriccion[i]) >= 0) ) && tagsTitle.condicionesEt[i] )
+              var topicData = Topic.getTopicData(postContent.tid, function(err,topicData) {
+                //console.log(topicData);
+                if(err || !topicData)
                 {
-                  postContent.read = false;
-                  callback(new Error(tagsTitle.mostrarError[0]+tagsTitle.mensajeError[i]+tagsTitle.mostrarError[1]), postContent);
-                  return;
+                  return callback(err, postContent);
                 }
-              }
-              // Si llego aqui es que puede ver el hilo
-              callback(null, postContent);
-              return;
-            });// Fin buscar topic
-          }); // Fin buscar User
+                // console.log(topicData);
+
+                // condiciones para cada etiqueta con restricciones..
+                tagsTitle.condicionesEt = [ ( tagsTitle.postCount < 1 ), // +hd
+                                    ( tagsTitle.postCount < 1 ), // +18
+                                    ( tagsTitle.postCount < 1 ), // +nsfw
+                                    ( tagsTitle.postCount < 1 ), // +nsfl
+                                    ( tagsTitle.postCount < 1 ), // +gore
+                                    ( tagsTitle.postCount < 100 || (getUserData.joindate > topicData.timestamp) ) // +prv
+                                  ];
+                
+                var topicTitle = topicData.title.toLowerCase();
+
+                for(var i=0;i<tagsTitle.etiquetasConRestriccion.length;i++)
+                {
+                  if( ( (topicTitle.indexOf(tagsTitle.etiquetasConRestriccion[i]) >= 0) || (tagsStr.indexOf(tagsTitle.etiquetasConRestriccion[i]) >= 0) ) && tagsTitle.condicionesEt[i] )
+                  {
+                    postContent.read = false;
+                    callback(new Error(tagsTitle.mostrarError[0]+tagsTitle.mensajeError[i]+tagsTitle.mostrarError[1]), postContent);
+                    return;
+                  }
+                }
+                // Si llego aqui es que puede ver el hilo
+                callback(null, postContent);
+                return;
+              });// Fin buscar topic
+            }); // Fin buscar User
+          }); // fin is admin
         }
         else
         { // Si no esta logeado, miro si hay etiquetas, y si las hay directmente no entra
