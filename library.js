@@ -176,7 +176,7 @@ tagsTitle.etiquetasSinRestriccion = ["TemaSerio", "Plataforma", "Peña", "Tutori
         }
         if(title.indexOf(actTag) < 0 && (tagsStr.indexOf(actTag) > -1) )
         {
-          titleOk = titleOk + " " + actTagCorchetes;
+          titleOk = titleOk + " " + actTagCapitalizada;
         }
       }
 
