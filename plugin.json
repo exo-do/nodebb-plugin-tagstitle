@@ -7,6 +7,9 @@
 
 	"hooks": [
 		{
+      "hook": "static:app.load", "method": "init"
+    },
+		{
 			"hook": "filter:privileges.topics.get", "method": "privilegesTopicsGet", "callbacked": false
 		},
 		{

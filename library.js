@@ -8,28 +8,30 @@ var Tags = module.parent.require('./topics/tags'),
 
 var tagsTitle = {};
 
+var errorController = {};
+errorController.getErrorPage = function (req, res, next, data) {
+      //Will render the new template.
+      res.render('topic-error', data);
+    };
 
-
-  /*tagsTitle.init = function(params, callback) {
+  tagsTitle.init = function(params, callback) {
     var middleware = params.middleware,
     controllers = params.controllers;
     
-    controllers.getErrorPage = function (req, res, next) {
-      //Will render the new template.
-      res.render('topic-error', {});
-    };
+
+    
     //Regisrter routes for the new template with params.router.get
-    params.router.get('/topicerror',middleware.buildHeader, controllers.getErrorPage);
-    params.router.get('/api/topicerror', controllers.getErrorPage);
+    params.router.get('/topicerror',middleware.buildHeader, errorController.getErrorPage);
+    params.router.get('/api/topicerror', errorController.getErrorPage);
     callback();
-  };*/
+  };
 
 // filter:privileges.topics.get
 tagsTitle.privilegesTopicsGet = function(privileges, callback) {
 	var thing = true;
   //Dummy asignment for the redirect url.
 	if (thing){
-    privileges.redirectUrl = 'http://localhost:4567/users';
+    privileges.redirectUrl = '/users';
   }
 	callback(null, privileges);
 };
@@ -37,9 +39,14 @@ tagsTitle.privilegesTopicsGet = function(privileges, callback) {
 // filter:topic.build
 tagsTitle.topicBuild = function (data, callback) {
 	if (data.templateData.privileges.redirectUrl) {
-    //Execute redirect to the new page.
-		data.res.redirect(data.templateData.privileges.redirectUrl);
-    //data.template.name= 'topic-error';
+		if (data.templateData.privileges.redirectUrl === '/users') {
+      var errorMessage = {};
+      errorMessage.message = 'Este es mi error bitch';
+      errorMessage.errorType = 'Este hilo es +prv.';
+      errorController.getErrorPage(data.req,data.res,data.next,errorMessage);
+		}else{
+			callback(null, data);
+		}
 	}else{
 		callback(null, data);
 	}
