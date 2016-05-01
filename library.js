@@ -5,14 +5,35 @@ var Topic = module.parent.require('./topics');
 var db = module.parent.require('./database');
 var Tags = module.parent.require('./topics/tags'),
     async = require('async');;
+var helpers = require.main.require('./src/controllers/helpers');
 
 var tagsTitle = {};
+var errorController = {};
 
+errorController.getErrorPage = function (req, res, next, data) {
+  //Will render the new template.
+  res.render('topic-error', data);
+};
 
-// Usamos javascript para limpiar el error por defecto y poner solamente nuestro error
-// con lo que nos interesa
-tagsTitle.mostrarError = [  "<script>$('.alert.alert-danger').html('",
-                            "');</script>" ];
+tagsTitle.init = function(params, callback) {
+  var middleware = params.middleware,
+  controllers = params.controllers;
+
+  //Regisrter routes for the new template with params.router.get
+  params.router.get('/topicerror',middleware.buildHeader, errorController.getErrorPage);
+  params.router.get('/api/topicerror', errorController.getErrorPage);
+  callback();
+};
+
+// filter:privileges.topics.get
+//tagsTitle.privilegesTopicsGet = function(privileges, callback) {
+//	var thing = true;
+  //Dummy asignment for the redirect url.
+//	if (thing){
+//    privileges.redirectUrl = '/users';
+//  }
+//	callback(null, privileges);
+//};
 
 // Anadir las etiquetas que se quiera (Solo etiquetas con restriccion para no entrar al hilo)
 tagsTitle.etiquetasConRestriccion = ["+hd", "+18", "+nsfw", "+nsfl", "+gore","+prv"];
@@ -21,13 +42,15 @@ tagsTitle.etiquetasConRestriccion = ["+hd", "+18", "+nsfw", "+nsfl", "+gore","+p
 tagsTitle.condicionesEt = [];
 
 // Mensajes de error para cada etiqueta
-tagsTitle.mensajeError = [  "<b>+hd</b><br> Para ver este hilo debes tener al menos 1 mensaje publicado",
-                      "<b>+18</b><br> Para ver este hilo debes tener al menos 1 mensaje publicado",
-                      "<b>+nsfw</b><br> Para ver este hilo debes tener al menos 1 mensaje publicado",
-					           "<b>+nsfl</b><br> Para ver este hilo debes tener al menos 1 mensaje publicado",
-                      "<b>+gore</b><br> Para ver este hilo debes tener al menos 1 mensaje publicado",
-                      "<b>+prv</b><br> Para ver este hilo debes tener mas de 100 mensajes publicados y estar registrado antes de que se crease este hilo" ];
+tagsTitle.mensajeError = [  "Para ver este hilo debes tener al menos 1 mensaje publicado",
+                      "Para ver este hilo debes tener al menos 1 mensaje publicado",
+                      "Para ver este hilo debes tener al menos 1 mensaje publicado",
+					           "Para ver este hilo debes tener al menos 1 mensaje publicado",
+                      "Para ver este hilo debes tener al menos 1 mensaje publicado",
+                      "Para ver este hilo debes tener mas de 100 mensajes publicados y estar registrado antes de que se crease este hilo" ];
 
+tagsTitle.mensajeGenerico = "El hilo al que estás intentando acceder solo puede ser leído por usuarios logueados."
+tagsTitle.tipoGenerico = "Usuario no logueado";
 
 // Etiquetas sin restriccion de acceso
 // Para estas etiquetas no hay que poner ningun mensaje de error de acceso ni condiciones!
@@ -106,8 +129,10 @@ tagsTitle.etiquetasSinRestriccion = ["TemaSerio", "Plataforma", "Peña", "Tutori
                 {
                   if( ( (topicTitle.indexOf(tagsTitle.etiquetasConRestriccion[i]) >= 0) || (tagsStr.indexOf(tagsTitle.etiquetasConRestriccion[i]) >= 0) ) && tagsTitle.condicionesEt[i] )
                   {
-                    postContent.read = false;
-                    callback(new Error(tagsTitle.mostrarError[0]+tagsTitle.mensajeError[i]+tagsTitle.mostrarError[1]), postContent);
+                    postContent.read = true;
+                    postContent.errorMessage = tagsTitle.mensajeError[i];
+                    postContent.errorType = tagsTitle.etiquetasConRestriccion[i];
+                    callback(null, postContent); 
                     return;
                   }
                 }
@@ -132,8 +157,10 @@ tagsTitle.etiquetasSinRestriccion = ["TemaSerio", "Plataforma", "Peña", "Tutori
             {
               if( ( (topicTitle.indexOf(tagsTitle.etiquetasConRestriccion[i]) >= 0) || (tagsStr.indexOf(tagsTitle.etiquetasConRestriccion[i]) >= 0) ) )
               {
-                postContent.read = false;
-                callback(new Error(tagsTitle.mostrarError[0]+tagsTitle.mensajeError[i]+tagsTitle.mostrarError[1]), postContent);
+                postContent.read = true;
+                postContent.errorMessage = tagsTitle.mensajeError[i];
+                postContent.errorType = tagsTitle.etiquetasConRestriccion[i];
+                callback(null, postContent);
                 return;
               }
             }
@@ -278,7 +305,9 @@ tagsTitle.etiquetasSinRestriccion = ["TemaSerio", "Plataforma", "Peña", "Tutori
             {
               if( ( (topicTitle.indexOf(tagsTitle.etiquetasConRestriccion[i]) >= 0) || (tagsStr.indexOf(tagsTitle.etiquetasConRestriccion[i]) >= 0) ) )
               {
-                postContent.read = false;
+                postContent.read = true;
+                postContent.errorMessage = tagsTitle.mensajeGenerico;
+                postContent.errorType = tagsTitle.tipoGenerico;
                 return callback("error", false);
               }
             }
@@ -289,6 +318,20 @@ tagsTitle.etiquetasSinRestriccion = ["TemaSerio", "Plataforma", "Peña", "Tutori
       }
     }); // Fin buscar tag en db
   };
+
+// filter:topic.build
+tagsTitle.topicBuild = function (data, callback) {
+  if (data.templateData.privileges.errorMessage) {
+    var errorMessage = {};
+    errorMessage.message = data.templateData.privileges.errorMessage;
+    errorMessage.type =  data.templateData.privileges.errorType;
+    errorController.getErrorPage(data.req,data.res,data.next,errorMessage);
+    //helpers.notAllowed(data.req,data.res, data.templateData.privileges.errorMessage);
+  }else{
+    callback(null, data);
+  }
+};
+
 
 
 module.exports = tagsTitle;

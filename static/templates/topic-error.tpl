@@ -1,1 +1,4 @@
-<p>Error de acceso a topic</p>
+<div class="alert alert-danger">
+    <strong>{type}</strong>
+    <p>{message}</p>
+</div>
