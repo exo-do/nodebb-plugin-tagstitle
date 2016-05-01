@@ -1,4 +1,4 @@
 <div class="alert alert-danger">
-    <strong>{errorType}</strong>
+    <strong>{type}</strong>
     <p>{message}</p>
 </div>

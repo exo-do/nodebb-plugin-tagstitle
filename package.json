@@ -1,11 +1,11 @@
 {
   "name": "nodebb-plugin-tagstitle",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "This plugin allows users create new topics with special restrictions with special tags, for example, +hd, +prv, +nsfw...",
   "main": "library.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/rbbau/nodebb-plugin-tags-title"
+    "url": "https://github.com/jarey/nodebb-plugin-tags-title"
   },
   "keywords": [
     "nodebb",
@@ -14,10 +14,10 @@
     "shell"
   ],
   "author": {
-    "name": "Rubén Ballester",
-    "email": "irbbau@gmail.com"
+    "name": "Exodo",
+    "email": "contacto@exo.do"
   },
   "bugs": {
-    "url": "https://github.com/rbbau/nodebb-plugin-tags-title/issues"
+    "url": "https://github.com/jarey/nodebb-plugin-tags-title/issues"
   }
 }

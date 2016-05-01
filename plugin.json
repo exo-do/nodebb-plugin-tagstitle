@@ -10,10 +10,17 @@
       "hook": "static:app.load", "method": "init"
     },
 		{
-			"hook": "filter:privileges.topics.get", "method": "privilegesTopicsGet", "callbacked": false
+			"hook": "filter:privileges.topics.get", "method": "getTopicPrivileges", "callbacked": false
 		},
 		{
 			"hook": "filter:topic.build", "method": "topicBuild", "callbacked": true
+		},
+		{
+			"hook": "action:topic.save", "method": "topicSaved", "callbacked": true
+		}
+		,
+		{
+			"hook": "action:topic.edit", "method": "topicSaved", "callbacked": true
 		}
 	],
   "staticDirs": {
@@ -23,5 +30,5 @@
 		"lib/client.js"
 	],
   "templates": "static/templates",
-  "minver": "0.6.1"
+  "minver": "1.0.3"
 }
