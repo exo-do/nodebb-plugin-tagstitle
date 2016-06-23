@@ -54,7 +54,7 @@ tagsTitle.tipoGenerico = "Usuario no logueado";
 
 // Etiquetas sin restriccion de acceso
 // Para estas etiquetas no hay que poner ningun mensaje de error de acceso ni condiciones!
-tagsTitle.etiquetasSinRestriccion = ["TemaSerio", "Plataforma", "Peña", "Tutorial", "Noticia", "Review", "Debate", "Encuesta", "Info", "Duda", "Chollo", "Importante"];
+tagsTitle.etiquetasSinRestriccion = ["TemaSerio", "Plataforma", "Peña", "Tutorial", "Noticia", "Review", "Debate", "Encuesta", "Info", "Duda", "Chollo", "Importante", "Flood"];
 
 
 
