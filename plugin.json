@@ -17,8 +17,7 @@
 		},
 		{
 			"hook": "action:topic.save", "method": "topicSaved", "callbacked": true
-		}
-		,
+		},
 		{
 			"hook": "action:topic.edit", "method": "topicSaved", "callbacked": true
 		}
