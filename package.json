@@ -1,6 +1,6 @@
 {
   "name": "nodebb-plugin-tagstitle",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "This plugin allows users create new topics with special restrictions with special tags, for example, +hd, +prv, +nsfw...",
   "main": "library.js",
   "repository": {
